@@ -1,0 +1,30 @@
+#include <stdio.h>                                                                                                                                                                              
+#include <string.h>                                                                                                                                                                             
+#define N 128                                                                                                                                                                                   
+int main(int argc, char *argv[])                                                                                                                                                                
+{                                                                                                                                                                                               
+        FILE *fps, *fpd;                                                                                                                                                                        
+        char buf[N];                                                                                                                                                                            
+        int n;                                                                                                                                                                                  
+        if(argc < 3)                                                                                                                                                                            
+        {                                                                                                                                                                                       
+                printf("Usage: %s <src file> <dst file>\n",                                                                                                                                     argv[0]);                                                                                                                                                                                               }                                                                                                                                                                                       
+        if((fps = fopen(argv[1] , "r")) == NULL)                                                                                                                                                
+        {                                                                                                                                                                                       
+                perror("fopen src file");                                                                                                                                                       
+                return -1;                                                                                                                                                                      
+        }                                                                                                                                                                                       
+        if((fpd = fopen(argv[2] , "w")) == NULL)                                                                                                                                                
+        {                                                                                                                                                                                       
+                perror("fopen dst file");                                                                                                                                                       
+                return -1;                                                                                                                                                                      
+        }                                                                                                                                                                                       
+        memset(buf, 0 ,N);                                                                                                                                                                      
+        while((n=fread(buf,1, N, fps)) > 0)                                                                                                                                                     
+        {                                                                                                                                                                                       
+                fwrite(buf,1,n,fpd);                                                                                                                                                            
+                memset(buf, 0 ,N);                                                                                                                                                              
+        }                                                                                                                                                                                       
+        fclose(fps);                                                                                                                                                                            
+        fclose(fpd);                                                                                                                                                                            
+} 
