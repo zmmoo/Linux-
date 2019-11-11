@@ -22,7 +22,7 @@ path: 执行程序的名称 包含路径  arg:最后一个为NULL  file:程序�
 
 - `#include<unistd.h> int execv(const char*path, char *const argv[])` 失败返回-1
 - `#include<unistd.h> int execvp(const char*file, char *const argv[])` 失败返回-1
-eg: `char \argv[]={"ls","-a", "-l", "/etc",NULL}; execv("/bin/ls",arg)`
+- eg: `char \argv[]={"ls","-a", "-l", "/etc",NULL}; execv("/bin/ls",arg)`
 - `#include <stdlib.h> int system(const char *command)` 失败返回 -1
 
 
