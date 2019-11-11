@@ -11,7 +11,7 @@
 - 获取进程号 pid_t getpid(void)  ; 获取父进程号pid_t getppid(void)
 - 子进程几乎复制了父进程的内容 ， 父子进程有自己独立的地址空间 ，互不影响， 若父进程先结束，子进程成为孤儿进程，被init进程收养
 - 若子进程先结束时 父进程没有及时回收，子进程变成僵尸进程
-
+- 进程结束 #include<stdlib.h> #include<unistd.h> \<br>void exit(int status)(退出时刷新流的缓冲区)  void \_exit(int status)
 
 
 
