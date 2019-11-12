@@ -24,9 +24,19 @@ path: 执行程序的名称 包含路径  arg:最后一个为NULL  file:程序�
 - `#include<unistd.h> int execvp(const char*file, char *const argv[])` 失败返回-1
 - eg: `char \argv[]={"ls","-a", "-l", "/etc",NULL}; execv("/bin/ls",arg)`
 - `#include <stdlib.h> int system(const char *command)` 失败返回 -1
-## 进程回收 
+### 进程回收 
 - `#include<unistd.h> pid_t wait(int *status)`  成功时返回回收进程号  失败返回-1  若子进程没有结束，父进程一直阻塞  那个子进程先结束就先回收  返回子进程返回值和结束方式 status:man wait中有详细的宏定义
 - `#include <unistd.h> pid_t waitpid(pid_t pid, int*staus, int option)`失败时返回-1 option: 0（阻塞） / WNOHANG（非阻塞） 返回0时 表示进程没有结束  pid: -1 表示任意子进程
+
+## 守护进程 （Daemon）
+- 始终在后台运行
+- 独立于任何终端
+- 周期性的工作
+- 1.创建子进程，父进程退出（子进程成为孤儿进程，在后台运行，依附于终端（会话）） 
+- 2.在子进程中创建新的会话（setsid()）(子进程成为新的会话组长，脱离原来进程) 
+- 3.更改当前工作目录chdir（） 
+- 4.设定文件权限掩码umask(0(新的文件权限掩码))
+- 5 关闭父进程打开的文件描述符  getdtablesize()(打开的文件最大个数)
 
 
 
