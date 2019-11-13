@@ -38,7 +38,34 @@
 - sem 指向要初始化的信号量对象  pshared 0(线程间) 1（进程间）value信号量初值
 - `int sem_wait(sem_t *sem)` P操作  成功返回0 失败 -1  
 - `int sem_post(sem_t *sem)` V操作  成功返回0 失败 -1
+## 互斥 
+- 临界资源：一次只允许一个任务（进程、线程）访问的共享资源
+- 临界区：访问临界区的代码
+### 互斥机制
+- mutex互斥锁 
+- 任务访问临界资源前申请锁，访问完后释放锁
+### 互斥锁函数
+- `#include <pthread.h>`
+- `int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);` 成功时返回0 失败返回错误码  mutex 初始化互斥锁对象 attr互斥锁属性，NULL表示缺省属性
+- `int pthread_mutex_lock(pthread_mutex_t *mutex)` 如果无法获得锁 就会阻塞
+- `int pthread_mutex_unlock(pthread_mutex_t *mutex)` 执行完临界区要及时释放锁
+# 进程间通信
+## 早期UNIX进程间通信
+### 无名管道（pipe）
+- 只能用于有亲缘关系的进程
+- 单工的通讯模式，具有固定的读端和写端
+#### 函数 
+-  `#include <unistd.h>`
+- `int pipe(int pfd[2])` 成功返回0 失败返回-1（EOF） pfd:包含两个元素的整形数组 
+- pfd\[0]由于读管道 pfd\[1]由于些管道 
 
+### 有名管道（fifo）
+### 信号（signal）
+## System V IPC
+- 内存共享(share memory)
+- 消息队列(message queue)
+- 信号灯(semaphore set)
+## 套接字（socket）
 
 
 
