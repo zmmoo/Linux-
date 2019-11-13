@@ -1,6 +1,6 @@
 # 命令
 - ps -ef （man ps 中包含了详细信息）
-- ps -aux
+- ps aux  （ps aux -L显示线程）
 - top （动态显示）
 - cd /proc(对应进程号的详细信息)
 - nice -n 2  ./xxx  按指定优先级(-20 ~ +19)运行
