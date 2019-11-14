@@ -59,13 +59,55 @@
 - 3.读端存在  写管道     有空间：write返回写入的字节数  无空间：进程阻塞  （默认管道64K）
 - 4.读端不存在  写管道   管道断裂 
 - kill -l(查看信号列表)
-
 #### 函数 
 -  `#include <unistd.h>`
 - `int pipe(int pfd[2])` 成功返回0 失败返回-1（EOF） pfd:包含两个元素的整形数组 
 - pfd\[0]由于读管道 pfd\[1]由于些管道 
 ### 有名管道（fifo）
+- 对应管道文件，可以用于任意进程之间进程通信
+- 打开管道是可以指定读写方式
+- 通过文件IO操作，内容放在内存中
+- 读写端关闭时，内容清除
+#### 函数
+- `#include <unistd.h> #include <fcntl.h>`
+- `int mkfifo(const char * path, mode_t mode)`
+- path:管道路径
+- mode:管道文件权限 0666
+- 只有读端和写端都打开了 open()才不会阻塞
 ### 信号（signal）
+- SIGUP  关闭终端时产生
+- SIGINT  = ctrl+c 
+- SIGQUIT = ctrl+\
+- SIGILL 一个进程企图执行一条非法指令时产生
+- SIGSEV  非法访问内存时   
+- SIGPIPE 往一个没有读端的管道写操作时产生
+- SIGKILL 结束进程 不能捕捉和忽略
+- SIGSTOP  暂停
+- SIGTSTO ctrl+Z暂停
+- SIGCONT  让进程进入运行态
+- SIGALRM 通知进程定时器时间已到
+- SIGUSER1/2  保留给程序使用   
+#### 命令
+- kill(向进程发信号) \[-signal] pid  （kill默认发送 15（SIGTERM））
+- killall \[-u user|prog ]    prog:指定程序名 user:指定用户名
+#### 函数
+- `#include <unistd.h> #include<signal.h>`
+- `int kill(pid_t pid, int sig)`  成功返回0 失败-1
+- `int raise(int sig)`  给自己发信号
+- pid: 接收信号的进程号， 0代表同组， -1 代表所有进程
+- sig：信号类型
+- `int alarm(unsigned int seconds)` 设置闹钟 成功时返回上一个定时器的剩余时间  失败返回-1
+- second：定时器的时间   一个进程中只有一个定时器  时间到时产生SIGALRM
+- `int pause(void)`
+- 进程一直阻塞，直到信号中断
+- 信号中断后返回-1 errno为EINTR
+
+#### 设置信号响应方式
+- `#include <unistd.h>  #include <signal.h>`
+- `void (*signal(int signo,void(*handler)(int)))(int)` 不能设置SIGKILL\SIGSTOP
+- 成功时返回原先的信号处理函数  失败返回SIG_ERR
+- signo 要设置的信号
+- handler 指定信号处理函数  SIG_DFL 代表缺省方式  SIG_IGN 代表忽略信号
 ## System V IPC
 - 内存共享(share memory)
 - 消息队列(message queue)
