@@ -109,7 +109,24 @@
 - signo 要设置的信号
 - handler 指定信号处理函数  SIG_DFL 代表缺省方式  SIG_IGN 代表忽略信号
 ## System V IPC
-- 内存共享(share memory)
+- 每个IPC对象有唯一的ID
+- IPC对象创建后一直存在  直到被显示的删除
+- 每个IPC对象有一个关联的key
+- ipcs(查看systme V对象)/ipcrm（删除systme V对象）
+### 生成IPC对象的KEY值
+- `#include <sys/types.h> #include <sys/ipc.h>`
+- `key_t ftok(const char *path, int proj_id)`  成功时返回key值 失败返回-1
+- path：存在且可以访问的文件路径， proj_id:不为0
+### 内存共享(share memory)
+#### 共享内存的使用步骤
+- 创建\打开共享内存
+- `#include <sys/ipc.h> #include <sys/shm.h`
+- `int shmget(key_t key, int size, int shmflg)`  成功时返回共享内存ID 失败返回-1
+- key 和共享内存关联的key， IPC_PRIVATE或ftok生成
+- shmflg 共享内存标志位 IPC_CREAT|0666
+- 映射共享内存，即把指定的共享内存映射到进程的地址空间用于访问
+- 
+
 - 消息队列(message queue)
 - 信号灯(semaphore set)
 ## 套接字（socket）
