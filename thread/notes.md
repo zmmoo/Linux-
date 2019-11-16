@@ -137,7 +137,7 @@
 - 4 共享内存控制
 - `#inlcude <sys/ipc.h> #include <sys/shm.h>`
 - `int shmctl(int shmid, int cmd, struct shmid_ds *buf)`
-- shmid:要操作的共享内存ID
+- shmid:要操作的共享内存IDq
 - cmd 要操作IPC_STAT(获取共享内存的属性) IPC_SET（设置属性从buf）IPC_RMID（删除id buf:NULL)
 - buf 如果使用IPC_STAT IPC_SET 保存属性  
 - ipcs -l (查看IPC对象的设置)
@@ -154,7 +154,7 @@
 - msgflg 标志位IPC_CREAT|0666
 - 2.发送消息
 - `#include <sys/ipc.h> #include <sys/msg.h>`
-- `int msgsend(int msgid, const void*msgp, size_t size, int msgflg)` 成功时返回0 失败-1
+- `int msgsnd(int msgid, const void*msgp, size_t size, int msgflg)` 成功时返回0 失败-1
 - msgid 消息队列id
 - msgp 消息缓冲区地址
 - size 消息正文长度
@@ -172,11 +172,37 @@
 - `int msgctl(int msgid, int cmd, struct msqid_ds *buf)` 成功时返回0 失败-1
 - cmd 要操作IPC_STAT(获取共享内存的属性) IPC_SET（设置属性从buf）IPC_RMID（删除id buf:NULL)
 - buf 如果使用IPC_STAT IPC_SET 保存属性 
-
 #### 消息格式
 - 首成员必须为long 消息的类型  使用时可以任意值（不可为0 或负数）
 - 正文 （自由定义类型）  通讯时双方要相同的 类型（首成员值 相同）
 ### 信号灯(semaphore set)
+- 信号灯也叫信号量 用于进程\线程同步或互斥的机制
+- posix 无名信号灯  有名信号灯    System V信号灯
+- System V信号灯是一个或多个计数信号灯的集合
+- 可同时操作集合中的多个信号灯
+- 申请资源时避免死锁  
+#### 函数 
+- `#include <sys/ipc.h> #include <sys/sem.h>`
+- 打开\创建信号灯
+- `int semget(key_t key, int nsems, int semflg)` 成功返回信号灯Id 失败返回-1
+- nsems  集合中包含计数信号灯的个数
+- semflg 标志位 IPC_CREAT|0666|IPC_EXCL
+- 信号的初始化
+- `int semctl(int semid, int semnum, int cmd,...)`成功返回信号灯Id 失败返回-1
+- semid: 要操作那个信号灯集合id
+- semnum： 要操作的集合中的信号的编号
+- cmd 要执行的操作 SETVAL IPC_RMID
+- union semun 取决于cmd（SETVAL时）（自己定义这个共用体 man semctl中有介绍）
+- P\V操作
+- `int semop(int semid, struct sembuf *sops, unsigned nsops)`成功返回信号灯Id 失败返回-1
+- sops: 描述对信号的操作的结构体
+- nsops 要操作的信号的个数
+- `struct sembu{short semnum ;short sem_op; short sem_flg }`  
+- semnum 信号灯编号
+- sem_op -1:P操作 1：V操作
+- sem_flg  0\IPC_NOWAIT
+
+- 删除信号灯
 ## 套接字（socket）
 
 
