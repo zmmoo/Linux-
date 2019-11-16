@@ -113,22 +113,70 @@
 - IPC对象创建后一直存在  直到被显示的删除
 - 每个IPC对象有一个关联的key
 - ipcs(查看systme V对象)/ipcrm（删除systme V对象）
-### 生成IPC对象的KEY值
+#### 生成IPC对象的KEY值
 - `#include <sys/types.h> #include <sys/ipc.h>`
 - `key_t ftok(const char *path, int proj_id)`  成功时返回key值 失败返回-1
 - path：存在且可以访问的文件路径， proj_id:不为0
 ### 内存共享(share memory)
 #### 共享内存的使用步骤
-- 创建\打开共享内存
+- 1.创建\打开共享内存
 - `#include <sys/ipc.h> #include <sys/shm.h`
 - `int shmget(key_t key, int size, int shmflg)`  成功时返回共享内存ID 失败返回-1
 - key 和共享内存关联的key， IPC_PRIVATE或ftok生成
 - shmflg 共享内存标志位 IPC_CREAT|0666
-- 映射共享内存，即把指定的共享内存映射到进程的地址空间用于访问
-- 
+- 2. 映射共享内存，即把指定的共享内存映射到进程的地址空间用于访问
+- `#include <sys/ipc.h>#include <sys/shm.h>`
+- `void *shmat(int shmid, const void *shmaddr,int shflg)`成功返回映射后的地址 ，失败-1
+- shmid 要映射的共享内存id
+- shmaddr 映射后的地址， NULL表示由系统自动映射
+- shmflg 标志位 0 表示可读写， SHM_RDONLY表示只读
+- 3. 共享内存撤销 
+- `#inlcude <sys/ipc.h> #include <sys/shm.h>`
+- `int shmdt(void *shmaddr)`  成功返回0  失败 -1
+- 进程结束时自动撤销
+- 4 共享内存控制
+- `#inlcude <sys/ipc.h> #include <sys/shm.h>`
+- `int shmctl(int shmid, int cmd, struct shmid_ds *buf)`
+- shmid:要操作的共享内存ID
+- cmd 要操作IPC_STAT(获取共享内存的属性) IPC_SET（设置属性从buf）IPC_RMID（删除id buf:NULL)
+- buf 如果使用IPC_STAT IPC_SET 保存属性  
+- ipcs -l (查看IPC对象的设置)
+- cat /proc/sys/kernel/shmmax 修改参数
+- 共享内存删除  shmctl（）添加删除标记   nattach变成0时真正删除
+### 消息队列(message queue)
+- 消息队列由ID来唯一标识
+- 用户可以读写
+- 消息队列可以按照类型来发送/接收消息
+- 1.打开/创建消息队列 
+- `#include <sys/ipc.h> #include <sys/msg.h>`
+- `int msgget(key_t key, int msgflg)` 成功返回队列id，失败-1
+- key:和消息队列关联的key IPC_PRIVATE或ftok
+- msgflg 标志位IPC_CREAT|0666
+- 2.发送消息
+- `#include <sys/ipc.h> #include <sys/msg.h>`
+- `int msgsend(int msgid, const void*msgp, size_t size, int msgflg)` 成功时返回0 失败-1
+- msgid 消息队列id
+- msgp 消息缓冲区地址
+- size 消息正文长度
+- msgflg 标志位0(消息发送成功时返回) 或IPC_NOWAIT
+- 3 消息接收 
+- `#include <sys/ipc.h> #include <sys/msg.h>`
+- `int msgrcv(int msgid, void *msgp, size_t size, long msgtype, int msgflg)` 成功时返回消息长度，失败-1
+- msgid: 消息队列id 
+- msgp 消息缓冲区地址
+- size 指定接收消息长度
+- msgtypd 指定接收消息的类型（0 最早的消息）
+- msgflg 标志位0(消息发送成功时返回) 或IPC_NOWAIT
+- 4.控制消息队列
+- `#include <sys/ipc.h> #include <sys/msg.h>`
+- `int msgctl(int msgid, int cmd, struct msqid_ds *buf)` 成功时返回0 失败-1
+- cmd 要操作IPC_STAT(获取共享内存的属性) IPC_SET（设置属性从buf）IPC_RMID（删除id buf:NULL)
+- buf 如果使用IPC_STAT IPC_SET 保存属性 
 
-- 消息队列(message queue)
-- 信号灯(semaphore set)
+#### 消息格式
+- 首成员必须为long 消息的类型  使用时可以任意值（不可为0 或负数）
+- 正文 （自由定义类型）  通讯时双方要相同的 类型（首成员值 相同）
+### 信号灯(semaphore set)
 ## 套接字（socket）
 
 
