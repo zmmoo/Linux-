@@ -46,8 +46,18 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - `int inet_pton(int af, const *src, void *dst)`  适用于IPV4\6 正确处理 4个255的问题
 - af:地址协议族（AF_INET AF_INET6） src: 点分形式的IP地址 dst:转换的结果
 
+## TCP编程
+- c/s模式 
+- `#include <sys/types.h> #include <sys/socket.h>`
+- `int socket(int domain, int type, int protocol)`  成功返回sockfd,失败-1
+- domain:AF_INET AF_INET6 AF_LOCAL
+- type: SOCK_STREAM(TCP)  SOCK_DGRAM(UDP)  SOCK_RAW
+- protocol:一般为0 原始套接字编程时需要
 
-
+- `int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)`
+- addr: struct sockaddr{sa_family_t sa_family_t; char sa_data\[14]};绑定时用
+- struct sockaddr_in{sa_family_t sin_family; in_port_t sin_port;struct in_addr sin_addr};  struct in_addr{uint32_t s_addr;};
+-  addrlen：地址长度
 
 
 
