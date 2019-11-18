@@ -47,7 +47,8 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - af:地址协议族（AF_INET AF_INET6） src: 点分形式的IP地址 dst:转换的结果
 
 ## TCP编程
-- c/s模式 
+- c/s模式 server :socket-->bind-->listen-->accept-->文件操作
+- client:
 - `#include <sys/types.h> #include <sys/socket.h>`
 - `int socket(int domain, int type, int protocol)`  成功返回sockfd,失败-1
 - domain:AF_INET AF_INET6 AF_LOCAL
@@ -59,8 +60,11 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - struct sockaddr_in{sa_family_t sin_family; in_port_t sin_port;struct in_addr sin_addr};  struct in_addr{uint32_t s_addr;};
 -  addrlen：地址长度
 
-
-
+- `int listen(int sockfd, int backlog)` 成功返回0 失败-1
+- backlog: 一般填5  同时允许几路客服端和服务器进行正在的连接过程
+- `int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)` 
+- 阻塞等待客户连接   失败返回-1  成功返回已经建立好连接的sockfd
+- addr:客户端信息（IP地址和端口号）
 
 
 
