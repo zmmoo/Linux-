@@ -48,7 +48,7 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 
 ## TCP编程
 - c/s模式 server :socket-->bind-->listen-->accept-->文件操作
-- client:
+- client:socket-->connect-->文件操作
 - `#include <sys/types.h> #include <sys/socket.h>`
 - `int socket(int domain, int type, int protocol)`  成功返回sockfd,失败-1
 - domain:AF_INET AF_INET6 AF_LOCAL
@@ -65,7 +65,17 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - `int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)` 
 - 阻塞等待客户连接   失败返回-1  成功返回已经建立好连接的sockfd
 - addr:客户端信息（IP地址和端口号）
+-  `int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)` 成功返回0 失败-1
+- connect与bind相似
+- `ssize_t send(int sockfd, const void *buf, size_t len, int flags)`
+- flags: 一般为0 此时和write一样   为MSG_DONTWAIT时 不阻塞 MSG_OOB
+- `ssize_t recv(int sockfd, void *buf, size_t len, int flags)`
+- flags: 一般为0 此时和read一样   为MSG_DONTWAIT时 不阻塞 MSG_OOB MSG_PEEK（读取时流的位置不移动）
 
-
-
-
+## UDP编程（无连接的尽力传输）
+- server:socket-->bind-->recvfrom(阻塞等待客户端数据)-->sendto
+- client: socket-->sendto-->recvfrom-->close
+- `ssize_t sendto(int sockfd, const void *buf, size_t len, int flags,const struct sockaddr *dest_addr, socklen_t addrlen);`
+- dest_addr:需要发送的地址
+- ` ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags,struct sockaddr *src_addr, socklen_t *addrlen);`
+- src_addr：需要接受的数据的地址
