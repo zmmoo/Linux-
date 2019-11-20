@@ -75,7 +75,35 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 ## UDP编程（无连接的尽力传输）
 - server:socket-->bind-->recvfrom(阻塞等待客户端数据)-->sendto
 - client: socket-->sendto-->recvfrom-->close
-- `ssize_t sendto(int sockfd, const void *buf, size_t len, int flags,const struct sockaddr *dest_addr, socklen_t addrlen);`
+- `ssize_t sendto(int sockfd, const void *buf, size_t len, int flags,const struct sockaddr *dest_addr, socklen_t addrlen);`不阻塞
 - dest_addr:需要发送的地址
 - ` ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags,struct sockaddr *src_addr, socklen_t *addrlen);`
 - src_addr：需要接受的数据的地址
+## IO模型
+### 阻塞IO
+- read(没有数据时阻塞)  
+- recv recvfrom  write send accept connect
+### 非阻塞IO
+- 使用fcntl实现非阻塞  `flag=fcntl(sockfd, F_GETEL, 0) flag|=O_NONBLOCK`
+- `int b_on = 1ioctl(sockfd, FIONBIO,&b_on)`
+### 多路复用IO
+- 针对的不止时套接字，所有的文件描述符
+- 1 把关心的文件描述符加入到fd_set中
+- 2 调用select()/poll()函数去监控集合fd_set中的文件描述符，阻塞等待一个或多个文件描述符有数据
+- 3 当有数据时，退出select（）阻塞
+- 4 依次判断哪个文件描述符有数据
+- 5 依次处理有数据的文件描述符
+- `void FD_ZERO(fd_set *fdset)`  集清0合
+- `void FD_SET(int fd, fd_set *fdset)` 加入集合
+- `void FD_CLR(int fd, fd_set *fdset)` 从集合清除
+- `void FD_ISSET(int fd, fd_set *fdset)`  判断fd是否包含fdset
+- `int select(int nfds, fd_set *readfds, fd_set*writefds, fd_set *exceptfds, struct timeval *timeout)`
+- nfds:最大文件描述符加一
+- 一般readfds writefds为NULL 异常数据一般为NULL 
+- timeout  `struct timeval{long tv_sec(秒); long tv_usec（微妙）;}`
+- select退出后：集合表示有数据的集合
+
+
+
+
+
