@@ -47,6 +47,7 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - af:地址协议族（AF_INET AF_INET6） src: 点分形式的IP地址 dst:转换的结果
 
 ## TCP编程
+- 连接时3次握手　　退出时４次握手
 - c/s模式 server :socket-->bind-->listen-->accept-->文件操作
 - client:socket-->connect-->文件操作
 - `#include <sys/types.h> #include <sys/socket.h>`
@@ -102,7 +103,7 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - 一般readfds writefds为NULL 异常数据一般为NULL 
 - timeout  `struct timeval{long tv_sec(秒); long tv_usec（微妙）;}`
 - select退出后：集合表示有数据的集合
-
+- 网络编程中read返回值为0时　表示对方关闭
 
 
 
