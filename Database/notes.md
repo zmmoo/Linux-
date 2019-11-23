@@ -1,0 +1,23 @@
+# SQLite
+- .help
+- .quit .exit
+- sqlite3 student.db  创建一个数据库
+- create table stu(id Integer, name char, socre Integer); 创建一张表格
+- 基本的sql命令不以.开头，但以;结尾
+- .schema 打印表格结构图
+- insert into stu values(1001, 'zhang', 80);  插入数据
+- insert into stu values(1002, "li", 90);
+- select * from stu; 查看表stu中所有内容
+- insert into stu (name, socre)values(1003,"wang"); 插入部分字段
+- select name from stu 查询name字段 select name,socre from stu
+- select * from stu where socre=80;
+- select * from stu where socre=80 and（or） name='zhangsan';
+- delete from stu where id=1003 or（and）.....; 删除id为1003的数据 不加where会删除所有数据
+- update stu set name='wangwu', socre = 80 where id 1001  设置id为1001的name和score
+- .datebase 查看带看的数据库
+- .table 查看表格
+- alter table stu add column address char; 添加address列
+- 删除列  
+- 1 创建一个表（create table stu1 as select id,name,score from stu） 
+- 2  删除原有表格 drop table stu;
+- 3  改名字  alter table stu1 rename to stu
