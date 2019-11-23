@@ -131,7 +131,7 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 -`{setsockopt(sockfd, SOL_SOCKET,SO_KEEPALIVE, (const char*)&attr_on, sizeof(attr_on);setsockopt(sockfd, SOL_TCP,KEEPIDLE,(const char*)&attr_on, sizeof(idle_time, sizeof(idle_time));setsockopt(sockfd, SOL_TCP,SO_KEEPINTVAL, (const char*)&interval, sizeof(interval);setsockopt(sockfd, SOL_SOCKET,SO_KEEPCNT, (const char*)&cnt, sizeof(cnt);}`
 - 使用`int keepAlive = 1; int keepIdle=5; int keepInterval=5; int keepCount=3; setKeepAlive(newfd, keepAlive, keepIdle, keepInterval, keepCount)`
 
-#　广播
+# 广播
 - 只有用户数据报（使用ＵＤＰ协议）套接字才能广播
 ## 广播的发送
 - １.创建用户数据报套接字
@@ -143,8 +143,28 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - 1.创建用户数据报套接字
 - 2.绑定本机ＩＰ地址和端口
 - 3.等待数据接收
+# 组播
+- 只有在多播组里的能接收数据
+## 组播地址
+- 224.0.0.1 -> 239.255.255.254 除去其中结尾为255的地址
+## 组播的发送
+- 1.socket数据报套接字
+- 2.接收方地址指定为组播地址　man 7 ip
+- 3.指定端口
+- 4.发送数据包
 
-
+# UNIX域套接字
+- 用于本地通讯　　AF_UNIX AF_LOCAL(man 7 unix)
+- `socket(AF_LOCAL, SOCK_STREAM, 0) socket(AF_LOCAL, SOCK_DGRAM, 0)`
+- 进程间数据共享
+- 易用性：消息队列>unix域套接字>管道>共享内存
+- 效率：　共享内存>unix域套接字>管道>消息队列
+- 常用:共享内存　unix域套接字
+## UNIX域套接字
+- server:socket->bind(本地地址)->listen->accept->recv/send
+- 本地地址结构：`struct sockaddr_un{sa_family_t sun_family; char sun_path[108]};`sun_path: 文件绝对路径，必须开始不存在｀
+- client:　socket->bind(本地地址)->connect->recv/send
+- 
 
 
 
