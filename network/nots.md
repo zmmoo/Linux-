@@ -105,6 +105,39 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 - select退出后：集合表示有数据的集合
 - 网络编程中read返回值为0时　表示对方关闭
 
+## 网络信息检索
+- `#include <netdb.h> extern in h_errno;`
+- `struct hostent *gehostbyname(const char *name)` 域名解析 得到３２位网络字节序 只能使用于IPV4
+- `struct hostent {`
+              ` char  *h_name;            /* official name of host */`
+              ` char **h_aliases;         /* alias list */`
+              ` int    h_addrtype;        /* host address type */`
+              ` int    h_length;          /* length of address */`
+               `char **h_addr_list;       /* list of addresses */`
+          ` }`
+- `void endhost(void)`
+## 网络属性设置
+- `int getsockopt(int sockfd, int level, int optname, void **optval, socklen_t *optlen)` 获取网络属性
+- level: SOL_SOCKET : 通用套接字（应用层）IPPROTO_TCP TCP选项 (传输层)　IPPROTO_IP IP选项（网络层）
+- optname: man 7 socket 中的sock options
+- `int b_br = 1 setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&b_br, sizeof(int))` 允许地址快速重用
+- `int b_br = 1 setsockopt(fd, SOL_SOCKET, SO_BROADCAST,&b_br, sizeof(int))` 允许F发送广播
+- `struct timeval out setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO,&b_br, sizeof(struct timeval))` 设置接受超时
+## 网络超时
+- 1.使用setsockopt recv和recvfrom 等待超时时间　不阻塞
+- 2.select()函数设置超时参数
+- alarm(5)  使用signal捕获信号
+- 函数　`void setKeepAlive(int sockfd, int attr_on, socklen_t idle_time, socklen_t interval, socklen_t cnt)'
+-`{setsockopt(sockfd, SOL_SOCKET,SO_KEEPALIVE, (const char*)&attr_on, sizeof(attr_on);setsockopt(sockfd, SOL_TCP,KEEPIDLE,(const char*)&attr_on, sizeof(idle_time, sizeof(idle_time));setsockopt(sockfd, SOL_TCP,SO_KEEPINTVAL, (const char*)&interval, sizeof(interval);setsockopt(sockfd, SOL_SOCKET,SO_KEEPCNT, (const char*)&cnt, sizeof(cnt);}`
+- 使用`int keepAlive = 1; int keepIdle=5; int keepInterval=5; int keepCount=3; setKeepAlive(newfd, keepAlive, keepIdle, keepInterval, keepCount)`
+
+
+
+
+
+
+
+
 
 
 
