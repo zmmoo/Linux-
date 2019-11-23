@@ -131,6 +131,19 @@ cp :点分式转成32位整数（包含了字节序的转换，默认为网络�
 -`{setsockopt(sockfd, SOL_SOCKET,SO_KEEPALIVE, (const char*)&attr_on, sizeof(attr_on);setsockopt(sockfd, SOL_TCP,KEEPIDLE,(const char*)&attr_on, sizeof(idle_time, sizeof(idle_time));setsockopt(sockfd, SOL_TCP,SO_KEEPINTVAL, (const char*)&interval, sizeof(interval);setsockopt(sockfd, SOL_SOCKET,SO_KEEPCNT, (const char*)&cnt, sizeof(cnt);}`
 - 使用`int keepAlive = 1; int keepIdle=5; int keepInterval=5; int keepCount=3; setKeepAlive(newfd, keepAlive, keepIdle, keepInterval, keepCount)`
 
+#　广播
+- 只有用户数据报（使用ＵＤＰ协议）套接字才能广播
+## 广播的发送
+- １.创建用户数据报套接字
+- 2.缺省创建的套接字不允许广播数据包，需要setsockopt()设置属性
+- 3.接收方地址指定为广播地址（xxx.xxx.xxx.255）
+- 4.指定端口信息
+- 5.发送数据包
+## 广播接收
+- 1.创建用户数据报套接字
+- 2.绑定本机ＩＰ地址和端口
+- 3.等待数据接收
+
 
 
 
