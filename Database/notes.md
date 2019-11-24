@@ -38,3 +38,4 @@
 - `int (*callback)(void * （参数），argm int(记录中字段的数目) , char** （包含每个字段值得指针数组）,char**(包含每个字段名称的指针数组))` 回调函数
 - 查询结果是一个指针类型，传递函数名即可
 - 不使用回调函数查询  `int sqlites_get_table(sqlite3 *db, const char *sql,char ***resultp, int *nrow, int ncolumn, )`
+- create table usr(name text primary key):primary key:主键　　相同的name 只能出现一次
